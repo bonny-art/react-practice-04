@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react';
-import { nanoid } from 'nanoid';
-
 import {
   Container,
   Grid,
@@ -13,23 +10,15 @@ import {
 } from 'components';
 
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addTodoAction, deleteTodoAction, getTodosSelector } from 'store/slice';
 
 export const App = () => {
-  const [todos, setTodos] = useState(
-    () => JSON.parse(localStorage.getItem('todos')) || []
-  );
-
-  useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos]);
+  const dispatch = useDispatch();
+  const todos = useSelector(getTodosSelector);
 
   const addTodo = text => {
-    const todo = {
-      id: nanoid(),
-      text,
-    };
-
-    setTodos(t => [...t, todo]);
+    dispatch(addTodoAction(text));
   };
 
   const handleSubmit = data => {
@@ -37,7 +26,7 @@ export const App = () => {
   };
 
   const deleteTodo = id => {
-    setTodos(t => t.filter(item => item.id !== id));
+    dispatch(deleteTodoAction(id));
   };
 
   return (
